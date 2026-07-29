@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alliance Standings Diff</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="panel">
+    <h1>Alliance Standings Diff Tool</h1>
+    <p class="subtitle">Build a master standings list, then compare it to the alliance's current contacts. ESI can only read alliance-wide contacts, not write them - this tool produces a checklist to apply by hand via the Alliance Executor UI.</p>
+
+    <div id="loginBox">
+      <input type="password" id="password" placeholder="Admin password">
+      <button class="btn btn-accent btn-full" id="loginBtn">Log In</button>
+    </div>
+
+    <div id="adminBox" style="display:none;">
+
+      <h2>Connected character</h2>
+      <div class="card" id="charCard">
+        <div id="notConnected">
+          <p class="subtitle" style="margin-bottom:12px;">Connect a character to import its contacts and/or read current alliance contacts. Needs read-contacts access on that character and, for the diff step, on its alliance.</p>
+          <a href="/auth/login" class="btn btn-accent">Connect with EVE SSO</a>
+        </div>
+        <div id="connected" style="display:none;">
+          <p>Connected as <span class="char-name" id="charName"></span> <span id="allianceNote" style="color:var(--muted);"></span></p>
+          <button class="btn" id="disconnectBtn">Disconnect</button>
+        </div>
+      </div>
+
+      <h2>Import contacts as master list</h2>
+      <div class="card">
+        <p class="subtitle" style="margin-bottom:12px;">Pulls the connected character's personal contacts and standings straight into the master list below.</p>
+        <div class="row-flex">
+          <button class="btn btn-accent" id="importOverwriteBtn">Import (replace list)</button>
+          <button class="btn" id="importMergeBtn">Import (merge into list)</button>
+        </div>
+      </div>
+
+      <h2>Paste a list</h2>
+      <p class="subtitle" style="margin-bottom:8px;">One character/corp/alliance name per line. All matched names get set to the standing you pick below.</p>
+      <textarea id="bulkNames" rows="5" placeholder="Some Corp Name&#10;Another Character&#10;Some Alliance"></textarea>
+      <div class="row-flex">
+        <select id="bulkStanding" style="flex:1;">
+          <option value="10">+10</option>
+          <option value="5">+5</option>
+          <option value="0">Neutral (0)</option>
+          <option value="-5">-5</option>
+          <option value="-10" selected>-10</option>
+        </select>
+        <button class="btn btn-accent" id="bulkAddBtn">Add List</button>
+      </div>
+
+      <h2>Add one at a time</h2>
+      <div class="row-flex">
+        <input type="text" id="searchName" placeholder="Character, corp, or alliance name">
+        <select id="searchType" style="width:140px;">
+          <option value="any">Any type</option>
+          <option value="character">Character</option>
+          <option value="corporation">Corporation</option>
+          <option value="alliance">Alliance</option>
+        </select>
+        <button class="btn" id="searchBtn">Search</button>
+      </div>
+      <div id="searchResults"></div>
+
+      <h2>Master list</h2>
+      <table id="listTable">
+        <thead><tr><th>Name</th><th>Type</th><th>Standing</th><th></th></tr></thead>
+        <tbody id="listBody"></tbody>
+      </table>
+
+      <h2>Generate diff vs current alliance contacts</h2>
+      <div class="card">
+        <button class="btn btn-accent btn-full" id="diffBtn">Generate Checklist</button>
+        <div id="diffResults"></div>
+      </div>
+
+      <div class="status" id="status"></div>
+      <button class="btn" id="logoutBtn" style="margin-top:16px;">Admin Log Out</button>
+    </div>
+  </div>
+
+  <script src="/admin.js"></script>
+</body>
+</html>
